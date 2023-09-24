@@ -7,10 +7,6 @@ pipeline {
             steps {
                 script {
                     IMAGE_NAME = "spring-example"
-                    IMAGE_STORAGE = "Container Registry 경로"
-                    IMAGE_STORAGE_CREDENTIAL = "Container Registry 접근 Credential id"
-                    SSH_CONNECTION = "접속할 계정@배포할 서버 IP"
-                    SSH_CONNECTION_CREDENTIAL = "SSH 서버 접근 Credential id"
                 }
             }
         }
@@ -50,7 +46,7 @@ pipeline {
                                         patternSeparator: '[, ]+',
                                         remoteDirectory: remoteServer['remoteDirectory'],
                                         remoteDirectorySDF: false,
-                                        removePrefix: 'build/libs', // 원본 파일 경로에서 제거할 접두사
+                                        removePrefix: '', // 원본 파일 경로에서 제거할 접두사
                                         sourceFiles: remoteServer['sourceFiles']
                                     )
                                 ]
