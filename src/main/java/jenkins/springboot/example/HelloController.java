@@ -16,3 +16,5 @@ public class HelloController {
         return "Bye! goodbye from test springboot application!";
     }
 }
+
+
