@@ -24,7 +24,7 @@ pipeline {
                 script {
                     def remoteServer = [
                         // SSH 호스트 설정
-                        name: 'RemoteServer',
+                        name: 'PipelineRemoteServer',
                         host: 'chiptune.iptime.org', // 대상 서버 주소
                         credentialsId: 'chiptune', // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
                         sourceFiles: 'build/libs/example-0.0.1-SNAPSHOT.jar, dockerfile, docker-compose.yml', // 전송할 로컬 파일 경로 및 패턴
