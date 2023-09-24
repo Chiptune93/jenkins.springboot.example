@@ -62,7 +62,7 @@ pipeline {
             steps {
                 script {
                     // 원격 서버에서 Docker 이미지 빌드 명령 실행
-                    sshCommand remote: remoteServer, command: 'docker build -t {IMAGE_NAME}:latest /jenkins/jenkins_deploy/springboot_example'
+                    sshCommand remote: remoteServer, command: 'docker build -t ${IMAGE_NAME}:latest /jenkins/jenkins_deploy/springboot_example'
 
                     // 빌드된 이미지를 Docker 레지스트리에 푸시 (옵션)
                     // sshCommand remote: remoteServer, command: 'docker push my-docker-image:latest'
