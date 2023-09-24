@@ -83,9 +83,5 @@ pipeline {
                 }
             }
         }
-
     }
-} catch (e) {
-  println "Caught: ${e}"
-  throw e
 }
