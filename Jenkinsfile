@@ -1,12 +1,15 @@
 pipeline {
     agent any
 
+    environment {
+            IMAGE_NAME = "spring-example"
+        }
+
     stages {
         // 변수 설정
         stage("Set Variable") {
             steps {
                 script {
-                    IMAGE_NAME = "spring-example"
                     def remoteServer = [
                         // SSH 호스트 설정
                         name: 'PipelineRemoteServer',
@@ -14,7 +17,7 @@ pipeline {
                         credentialsId: 'chiptune', // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
                         sourceFiles: 'build/libs/example-0.0.1-SNAPSHOT.jar, dockerfile, docker-compose.yml', // 전송할 로컬 파일 경로 및 패턴
                         remoteDirectory: '/jenkins/jenkins_deploy/springboot_example' // 대상 서버의 원격 디렉토리 경로
-                   ]
+                    ]
                 }
             }
         }
@@ -47,6 +50,7 @@ pipeline {
                                         remoteDirectorySDF: false,
                                         removePrefix: '', // 원본 파일 경로에서 제거할 접두사
                                         sourceFiles: remoteServer['sourceFiles']
+                                        verbose: true
                                     )
                                 ]
                             )
