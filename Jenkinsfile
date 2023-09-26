@@ -50,11 +50,10 @@ pipeline {
             }
         }
 
-        // 배포 서버에서 도커 이미지 빌드
+        // docker image build
         stage("CI: Docker Build") {
             steps {
                 script {
-                    // SSH 플러그인을 사용하여 파일 전송
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
@@ -62,16 +61,7 @@ pipeline {
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: """cd ~${REMOTE_DIRECTORY}"""
-                                    ),
-                                    sshTransfer(
-                                        flatten: false, // true로 설정하면 원격 경로에서 파일이 복사됩니다.
-                                        makeEmptyDirs: false, // true로 설정하면 원격 디렉토리에 빈 디렉토리가 생성됩니다.
-                                        noDefaultExcludes: false,
-                                        patternSeparator: '[, ]+',
-                                        remoteDirectory: '',
-                                        remoteDirectorySDF: false,
-                                        execCommand: """pwd & docker build -t ${IMAGE_NAME} .""" // 원격 명령 (비워둘 수 있음)
+                                        execCommand: """cd ~${REMOTE_DIRECTORY} && pwd && docker build -t ${IMAGE_NAME} ."""
                                     )
                                 ]
                             )
@@ -81,11 +71,10 @@ pipeline {
             }
         }
 
-        // 배포 서버에서 도커 빌드 된 도커 이미지 실행
+        // docker compose 이용한 배포
         stage("CD : Deploy") {
             steps {
                 script {
-                    // SSH 플러그인을 사용하여 파일 전송
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
@@ -93,16 +82,7 @@ pipeline {
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: """cd ~${REMOTE_DIRECTORY}"""
-                                    ),
-                                    sshTransfer(
-                                        flatten: false, // true로 설정하면 원격 경로에서 파일이 복사됩니다.
-                                        makeEmptyDirs: false, // true로 설정하면 원격 디렉토리에 빈 디렉토리가 생성됩니다.
-                                        noDefaultExcludes: false,
-                                        patternSeparator: '[, ]+',
-                                        remoteDirectory: '',
-                                        remoteDirectorySDF: false,
-                                        execCommand: 'docker compose stop && docker compose up -d --build' // 원격 명령 (비워둘 수 있음)
+                                        execCommand: """cd ~${REMOTE_DIRECTORY} && docker compose stop && docker compose up -d --build"""
                                     )
                                 ]
                             )
