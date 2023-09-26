@@ -7,6 +7,14 @@ pipeline {
             steps {
                 script {
                     IMAGE_NAME = "spring-example"
+                    def remoteServer = [
+                        // SSH 호스트 설정
+                        name: 'PipelineRemoteServer',
+                        host: 'chiptune.iptime.org', // 대상 서버 주소
+                        credentialsId: 'chiptune', // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
+                        sourceFiles: 'build/libs/example-0.0.1-SNAPSHOT.jar, dockerfile, docker-compose.yml', // 전송할 로컬 파일 경로 및 패턴
+                        remoteDirectory: '/jenkins/jenkins_deploy/springboot_example' // 대상 서버의 원격 디렉토리 경로
+                   ]
                 }
             }
         }
@@ -22,15 +30,6 @@ pipeline {
         stage("CI: Transfer Files") {
             steps {
                 script {
-                    def remoteServer = [
-                        // SSH 호스트 설정
-                        name: 'PipelineRemoteServer',
-                        host: 'chiptune.iptime.org', // 대상 서버 주소
-                        credentialsId: 'chiptune', // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
-                        sourceFiles: 'build/libs/example-0.0.1-SNAPSHOT.jar, dockerfile, docker-compose.yml', // 전송할 로컬 파일 경로 및 패턴
-                        remoteDirectory: '/jenkins/jenkins_deploy/springboot_example' // 대상 서버의 원격 디렉토리 경로
-                    ]
-
                     // SSH 플러그인을 사용하여 파일 전송
                     sshPublisher(
                         publishers: [
