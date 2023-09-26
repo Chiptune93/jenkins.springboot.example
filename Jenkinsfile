@@ -2,25 +2,17 @@ pipeline {
     agent any
 
     environment {
-            IMAGE_NAME = "spring-example"
-        }
+        IMAGE_NAME = "spring-example",
+        REMOTE_SERVER = [
+            name: 'PipelineRemoteServer',
+            host: 'chiptune.iptime.org',
+            credentialsId: 'chiptune',
+            sourceFiles: 'build/libs/example-0.0.1-SNAPSHOT.jar, dockerfile, docker-compose.yml',
+            remoteDirectory: '/jenkins/jenkins_deploy/springboot_example'
+        ]
+    }
 
     stages {
-        // 변수 설정
-        stage("Set Variable") {
-            steps {
-                script {
-                    def remoteServer = [
-                        // SSH 호스트 설정
-                        name: 'PipelineRemoteServer',
-                        host: 'chiptune.iptime.org', // 대상 서버 주소
-                        credentialsId: 'chiptune', // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
-                        sourceFiles: 'build/libs/example-0.0.1-SNAPSHOT.jar, dockerfile, docker-compose.yml', // 전송할 로컬 파일 경로 및 패턴
-                        remoteDirectory: '/jenkins/jenkins_deploy/springboot_example' // 대상 서버의 원격 디렉토리 경로
-                    ]
-                }
-            }
-        }
 
         // 프로젝트 빌드 및 테스트
         stage("CI: Project Build") {
@@ -37,7 +29,7 @@ pipeline {
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: remoteServer['name'],
+                                configName: ${remoteServer.name},
                                 transfers: [
                                     sshTransfer(
                                         execCommand: '', // 원격 명령 (비워둘 수 있음)
@@ -46,10 +38,10 @@ pipeline {
                                         makeEmptyDirs: false, // true로 설정하면 원격 디렉토리에 빈 디렉토리가 생성됩니다.
                                         noDefaultExcludes: false,
                                         patternSeparator: '[, ]+',
-                                        remoteDirectory: remoteServer['remoteDirectory'],
+                                        remoteDirectory: ${remoteServer.remoteDirectory},
                                         remoteDirectorySDF: false,
                                         removePrefix: '', // 원본 파일 경로에서 제거할 접두사
-                                        sourceFiles: remoteServer['sourceFiles'],
+                                        sourceFiles: ${remoteServer.sourceFiles},
                                         verbose: true
                                     )
                                 ]
@@ -64,6 +56,8 @@ pipeline {
         stage("CI: Docker Build") {
             steps {
                 script {
+                    def remoteServer = REMOTE_SERVER
+
                     // 원격 서버에서 Docker 이미지 빌드 명령 실행
                     def nowPath = 'pwd & ls -al'
                     def nowPathResult = sshCommand remote: remoteServer, command: nowPath, returnStatus: true
@@ -91,6 +85,8 @@ pipeline {
         stage("CD : Deploy") {
             steps {
                 script {
+                    def remoteServer = REMOTE_SERVER
+
                     // Docker Compose를 사용하여 컨테이너 실행
                     sshCommand remote: remoteServer, command: 'docker-compose -f /jenkins/jenkins_deploy/springboot_example/docker-compose.yml up -d'
                 }
