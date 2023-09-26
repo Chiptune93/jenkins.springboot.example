@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "spring-example",
+        IMAGE_NAME = "spring-example"
         REMOTE_SERVER = [
             name: 'PipelineRemoteServer',
             host: 'chiptune.iptime.org',
