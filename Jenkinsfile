@@ -102,7 +102,7 @@ pipeline {
                                         patternSeparator: '[, ]+',
                                         remoteDirectory: '',
                                         remoteDirectorySDF: false,
-                                        execCommand: 'pwd & docker compose up -d' // 원격 명령 (비워둘 수 있음)
+                                        execCommand: 'docker compose stop | docker compose up -d --build' // 원격 명령 (비워둘 수 있음)
                                     )
                                 ]
                             )
