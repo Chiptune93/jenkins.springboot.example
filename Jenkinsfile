@@ -23,7 +23,7 @@ pipeline {
         stage("CI: Transfer Files") {
             steps {
                 script {
-                    // SSH 플러그인을 사용하여 파일 전송
+                    // SSH 플러그인을 사용하여 명령 실행
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
@@ -54,31 +54,21 @@ pipeline {
         stage("CI: Docker Build") {
             steps {
                 script {
-                    def remoteServer = [
-                        name: "${REMOTE_NAME}", // SSH 호스트 설정의 이름
-                        host: "${REMOTE_HOST}", // 대상 서버 주소
-                        credentialsId: "${REMOTE_CREDENTIAL_ID}" // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
-                    ]
-
-                    // 원격 서버에서 Docker 이미지 빌드 명령 실행
-                    def nowPath = 'pwd & ls -al'
-                    def nowPathResult = sshCommand remote: remoteServer, command: nowPath, returnStatus: true
-                    if (nowPathResult == 0) {
-                        echo "Command '${nowPath}' executed successfully."
-                    } else {
-                        echo "Command '${nowPath}' failed with exit code ${nowPathResult}."
-                    }
-
-                    def dockerBuild = 'docker build -t ${IMAGE_NAME}:latest .'
-                    def dockerBuildResult = sshCommand remote: remoteServer, command: dockerBuild, returnStatus: true
-                    if (dockerBuildResult == 0) {
-                        echo "Command '${dockerBuild}' executed successfully."
-                    } else {
-                        echo "Command '${dockerBuild}' failed with exit code ${dockerBuildResult}."
-                    }
-
-                    // 빌드된 이미지를 Docker 레지스트리에 푸시 (옵션)
-                    // sshCommand remote: remoteServer, command: 'docker push my-docker-image:latest'
+                    // SSH 플러그인을 사용하여 파일 전송
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: "${REMOTE_NAME}",
+                                transfers: [
+                                    sshTransfer(
+                                        remoteDirectory: "${REMOTE_DIRECTORY}",
+                                        execCommand: 'docker build -t ${IMAGE_NAME}:latest .', // 원격 명령 (비워둘 수 있음)
+                                        verbose: true
+                                    )
+                                ]
+                            )
+                        ]
+                    )
                 }
             }
         }
@@ -87,20 +77,21 @@ pipeline {
         stage("CD : Deploy") {
             steps {
                 script {
-                    def remoteServer = [
-                        name: "${REMOTE_NAME}", // SSH 호스트 설정의 이름
-                        host: "${REMOTE_HOST}", // 대상 서버 주소
-                        credentialsId: "${REMOTE_CREDENTIAL_ID}" // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
-                    ]
-
-                    // Docker Compose를 사용하여 컨테이너 실행
-                    def dockerComposeDeploy = 'docker compose -f /jenkins/jenkins_deploy/springboot_example/docker-compose.yml up -d'
-                    def dockerComposeDeployResult = sshCommand remote: remoteServer, command: dockerComposeDeploy, returnStatus: true
-                    if (dockerBuildResult == 0) {
-                        echo "Command '${dockerComposeDeploy}' executed successfully."
-                    } else {
-                        echo "Command '${dockerComposeDeploy}' failed with exit code ${dockerComposeDeployResult}."
-                    }
+                    // SSH 플러그인을 사용하여 파일 전송
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: "${REMOTE_NAME}",
+                                transfers: [
+                                    sshTransfer(
+                                        remoteDirectory: "${REMOTE_DIRECTORY}",
+                                        execCommand: 'docker compose -f /jenkins/jenkins_deploy/springboot_example/docker-compose.yml up -d', // 원격 명령 (비워둘 수 있음)
+                                        verbose: true
+                                    )
+                                ]
+                            )
+                        ]
+                    )
                 }
             }
         }
