@@ -86,7 +86,7 @@ pipeline {
                                 transfers: [
                                     sshTransfer(
                                         remoteDirectory: "${REMOTE_DIRECTORY}",
-                                        execCommand: 'docker compose -f /jenkins/jenkins_deploy/springboot_example/docker-compose.yml up -d' // 원격 명령 (비워둘 수 있음)
+                                        execCommand: 'docker compose up -d' // 원격 명령 (비워둘 수 있음)
                                     )
                                 ]
                             )
