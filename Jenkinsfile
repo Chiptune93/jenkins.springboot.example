@@ -49,7 +49,7 @@ pipeline {
                                         remoteDirectory: remoteServer['remoteDirectory'],
                                         remoteDirectorySDF: false,
                                         removePrefix: '', // 원본 파일 경로에서 제거할 접두사
-                                        sourceFiles: remoteServer['sourceFiles']
+                                        sourceFiles: remoteServer['sourceFiles'],
                                         verbose: true
                                     )
                                 ]
