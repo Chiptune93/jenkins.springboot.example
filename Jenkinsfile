@@ -27,7 +27,7 @@ pipeline {
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: ${REMOTE_NAME},
+                                configName: "${REMOTE_NAME}",
                                 transfers: [
                                     sshTransfer(
                                         execCommand: '', // 원격 명령 (비워둘 수 있음)
@@ -36,10 +36,10 @@ pipeline {
                                         makeEmptyDirs: false, // true로 설정하면 원격 디렉토리에 빈 디렉토리가 생성됩니다.
                                         noDefaultExcludes: false,
                                         patternSeparator: '[, ]+',
-                                        remoteDirectory: ${REMOTE_DIRECTORY},
+                                        remoteDirectory: "${REMOTE_DIRECTORY}",
                                         remoteDirectorySDF: false,
                                         removePrefix: '', // 원본 파일 경로에서 제거할 접두사
-                                        sourceFiles: ${SOURCE_FILES},
+                                        sourceFiles: "${SOURCE_FILES}",
                                         verbose: true
                                     )
                                 ]
@@ -55,9 +55,9 @@ pipeline {
             steps {
                 script {
                     def remoteServer = [
-                        name: ${REMOTE_NAME}, // SSH 호스트 설정의 이름
-                        host: ${REMOTE_HOST}, // 대상 서버 주소
-                        credentialsId: ${REMOTE_CREDENTIAL_ID} // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
+                        name: "${REMOTE_NAME}", // SSH 호스트 설정의 이름
+                        host: "${REMOTE_HOST}", // 대상 서버 주소
+                        credentialsId: "${REMOTE_CREDENTIAL_ID}" // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
                     ]
 
                     // 원격 서버에서 Docker 이미지 빌드 명령 실행
@@ -88,9 +88,9 @@ pipeline {
             steps {
                 script {
                     def remoteServer = [
-                        name: ${REMOTE_NAME}, // SSH 호스트 설정의 이름
-                        host: ${REMOTE_HOST}, // 대상 서버 주소
-                        credentialsId: ${REMOTE_CREDENTIAL_ID} // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
+                        name: "${REMOTE_NAME}", // SSH 호스트 설정의 이름
+                        host: "${REMOTE_HOST}", // 대상 서버 주소
+                        credentialsId: "${REMOTE_CREDENTIAL_ID}" // Jenkins 자격 증명 ID (SSH 키 또는 사용자 이름/비밀번호)
                     ]
 
                     // Docker Compose를 사용하여 컨테이너 실행
