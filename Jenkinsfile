@@ -28,6 +28,7 @@ pipeline {
                         publishers: [
                             sshPublisherDesc(
                                 configName: "${REMOTE_NAME}",
+                                verbose: true,
                                 transfers: [
                                     sshTransfer(
                                         execCommand: '', // 원격 명령 (비워둘 수 있음)
@@ -39,8 +40,7 @@ pipeline {
                                         remoteDirectory: "${REMOTE_DIRECTORY}",
                                         remoteDirectorySDF: false,
                                         removePrefix: '', // 원본 파일 경로에서 제거할 접두사
-                                        sourceFiles: "${SOURCE_FILES}",
-                                        verbose: true
+                                        sourceFiles: "${SOURCE_FILES}"
                                     )
                                 ]
                             )
@@ -59,11 +59,11 @@ pipeline {
                         publishers: [
                             sshPublisherDesc(
                                 configName: "${REMOTE_NAME}",
+                                verbose: true,
                                 transfers: [
                                     sshTransfer(
                                         remoteDirectory: "${REMOTE_DIRECTORY}",
-                                        execCommand: 'docker build -t ${IMAGE_NAME}:latest .', // 원격 명령 (비워둘 수 있음)
-                                        verbose: true
+                                        execCommand: 'docker build -t ${IMAGE_NAME}:latest .' // 원격 명령 (비워둘 수 있음)
                                     )
                                 ]
                             )
@@ -82,11 +82,11 @@ pipeline {
                         publishers: [
                             sshPublisherDesc(
                                 configName: "${REMOTE_NAME}",
+                                verbose: true,
                                 transfers: [
                                     sshTransfer(
                                         remoteDirectory: "${REMOTE_DIRECTORY}",
-                                        execCommand: 'docker compose -f /jenkins/jenkins_deploy/springboot_example/docker-compose.yml up -d', // 원격 명령 (비워둘 수 있음)
-                                        verbose: true
+                                        execCommand: 'docker compose -f /jenkins/jenkins_deploy/springboot_example/docker-compose.yml up -d' // 원격 명령 (비워둘 수 있음)
                                     )
                                 ]
                             )
