@@ -62,8 +62,16 @@ pipeline {
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
+                                        execCommand: 'pwd & ls -al'
+                                    ),
+                                    sshTransfer(
+                                        flatten: false, // true로 설정하면 원격 경로에서 파일이 복사됩니다.
+                                        makeEmptyDirs: false, // true로 설정하면 원격 디렉토리에 빈 디렉토리가 생성됩니다.
+                                        noDefaultExcludes: false,
+                                        patternSeparator: '[, ]+',
                                         remoteDirectory: "${REMOTE_DIRECTORY}",
-                                        execCommand: 'docker build -t ${IMAGE_NAME}:latest .' // 원격 명령 (비워둘 수 있음)
+                                        remoteDirectorySDF: false,
+                                        execCommand: 'docker build -t ${IMAGE_NAME} .' // 원격 명령 (비워둘 수 있음)
                                     )
                                 ]
                             )
@@ -85,7 +93,15 @@ pipeline {
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
+                                        execCommand: 'pwd & ls -al'
+                                    ),
+                                    sshTransfer(
+                                        flatten: false, // true로 설정하면 원격 경로에서 파일이 복사됩니다.
+                                        makeEmptyDirs: false, // true로 설정하면 원격 디렉토리에 빈 디렉토리가 생성됩니다.
+                                        noDefaultExcludes: false,
+                                        patternSeparator: '[, ]+',
                                         remoteDirectory: "${REMOTE_DIRECTORY}",
+                                        remoteDirectorySDF: false,
                                         execCommand: 'docker compose up -d' // 원격 명령 (비워둘 수 있음)
                                     )
                                 ]
