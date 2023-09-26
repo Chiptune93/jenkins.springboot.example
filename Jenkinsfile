@@ -62,8 +62,21 @@ pipeline {
             steps {
                 script {
                     // 원격 서버에서 Docker 이미지 빌드 명령 실행
-                    sshCommand remote: remoteServer, command: 'pwd & ls -al'
-                    sshCommand remote: remoteServer, command: 'docker build -t ${IMAGE_NAME}:latest .'
+                    def nowPath = 'pwd & ls -al'
+                    def nowPathResult = sshCommand remote: remoteServer, command: nowPath, returnStatus: true
+                    if (nowPathResult == 0) {
+                        echo "Command '${nowPath}' executed successfully."
+                    } else {
+                        echo "Command '${nowPath}' failed with exit code ${nowPathResult}."
+                    }
+
+                    def dockerBuild = 'docker build -t ${IMAGE_NAME}:latest .'
+                    def dockerBuildResult = sshCommand remote: remoteServer, command: dockerBuild, returnStatus: true
+                    if (dockerBuildResult == 0) {
+                        echo "Command '${dockerBuild}' executed successfully."
+                    } else {
+                        echo "Command '${dockerBuild}' failed with exit code ${dockerBuildResult}."
+                    }
 
                     // 빌드된 이미지를 Docker 레지스트리에 푸시 (옵션)
                     // sshCommand remote: remoteServer, command: 'docker push my-docker-image:latest'
