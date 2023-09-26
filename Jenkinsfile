@@ -3,11 +3,11 @@ pipeline {
 
     environment {
         IMAGE_NAME = "spring-example"
-        REMOTE_NAME: 'PipelineRemoteServer'
-        REMOTE_HOST: 'chiptune.iptime.org'
-        REMOTE_CREDENTIAL_ID: 'chiptune'
-        SOURCE_FILES: 'build/libs/example-0.0.1-SNAPSHOT.jar, dockerfile, docker-compose.yml'
-        REMOTE_DIRECTORY: '/jenkins/jenkins_deploy/springboot_example'
+        REMOTE_NAME = "PipelineRemoteServer"
+        REMOTE_HOST =  "chiptune.iptime.org"
+        REMOTE_CREDENTIAL_ID = "chiptune"
+        SOURCE_FILES = "build/libs/example-0.0.1-SNAPSHOT.jar, dockerfile, docker-compose.yml"
+        REMOTE_DIRECTORY = "/jenkins/jenkins_deploy/springboot_example"
     }
 
     stages {
