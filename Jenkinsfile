@@ -93,14 +93,14 @@ pipeline {
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: """cd ~${REMOTE_DIRECTORY}"""
+                                        execCommand: "PORT=8100; PID=$(netstat -tuln | grep ":$PORT " | awk '{print $7}' | cut -d'/' -f1); [ -n "$PID" ] && kill -9 $PID"
                                     ),
                                     sshTransfer(
                                         flatten: false, // true로 설정하면 원격 경로에서 파일이 복사됩니다.
                                         makeEmptyDirs: false, // true로 설정하면 원격 디렉토리에 빈 디렉토리가 생성됩니다.
                                         noDefaultExcludes: false,
                                         patternSeparator: '[, ]+',
-                                        remoteDirectory: '',
+                                        remoteDirectory: "${REMOTE_DIRECTORY}",
                                         remoteDirectorySDF: false,
                                         execCommand: 'pwd & docker compose up -d' // 원격 명령 (비워둘 수 있음)
                                     )
