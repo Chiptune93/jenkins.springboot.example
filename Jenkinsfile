@@ -93,7 +93,7 @@ pipeline {
                                 verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: "PORT=8100; PID=$(netstat -tuln | grep ":$PORT " | awk '{print $7}' | cut -d'/' -f1); [ -n "$PID" ] && kill -9 $PID"
+                                        execCommand: """PORT=8100; PID=$(netstat -tuln | grep ":$PORT " | awk '{print $7}' | cut -d'/' -f1); [ -n "$PID" ] && kill -9 $PID"""
                                     ),
                                     sshTransfer(
                                         flatten: false, // true로 설정하면 원격 경로에서 파일이 복사됩니다.
