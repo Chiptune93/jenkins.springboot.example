@@ -71,7 +71,7 @@ pipeline {
                                         patternSeparator: '[, ]+',
                                         remoteDirectory: "${REMOTE_DIRECTORY}",
                                         remoteDirectorySDF: false,
-                                        execCommand: 'docker build -t ${IMAGE_NAME} .' // 원격 명령 (비워둘 수 있음)
+                                        execCommand: 'pwd & docker build -t "${IMAGE_NAME}" .' // 원격 명령 (비워둘 수 있음)
                                     )
                                 ]
                             )
@@ -102,7 +102,7 @@ pipeline {
                                         patternSeparator: '[, ]+',
                                         remoteDirectory: "${REMOTE_DIRECTORY}",
                                         remoteDirectorySDF: false,
-                                        execCommand: 'docker compose up -d' // 원격 명령 (비워둘 수 있음)
+                                        execCommand: 'pwd & docker compose up -d' // 원격 명령 (비워둘 수 있음)
                                     )
                                 ]
                             )
